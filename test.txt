@@ -1,0 +1,6 @@
+sifra x_01;
+sifra wifi(10,154);
+sifra wifi1 = wifi + 5;
+sifra imejl = wifi1 - wifi +4;
+stampaj wifi1 + imejl;
+stampaj wifi - 1;

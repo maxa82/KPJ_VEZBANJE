@@ -1,0 +1,19 @@
+maksimum:
+    enter 0,0
+
+    cmp edi, esi
+    jge prvi_max
+    jmp drugi_max
+
+prvi_max:
+    mov eax, edi
+    jmp kraj
+
+drugi_max:
+    mov eax, esi
+
+kraj:
+    leave
+    ret
+
+prazna_labela:

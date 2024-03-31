@@ -1,0 +1,28 @@
+class Graf:
+        def __init__(self):
+            self.cvorovi = {}
+
+        def dodaj_cvor(self, cvor):
+            #TODO
+            #ovo je neki komentar
+
+        def dodaj_granu(self, cvor1, cvor2):
+            #TODO
+
+        def __str__(self):
+
+;
+
+c1 = Cvor();
+c2 = Cvor();
+g = Graf();
+g.dodaj_cvor(c1);
+g.dodaj_cvor(c2);
+g.dodaj_granu(c1, c2);
+g.dodaj_granu(c2, c1);
+print(g);
+print(c1);
+
+
+
+

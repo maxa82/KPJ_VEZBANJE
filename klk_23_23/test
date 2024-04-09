@@ -1,0 +1,35 @@
+function Y = interp1Hermite(varArgIn)
+
+%ovo je neki komentar
+if length(varArgIn) < 1
+    error('adsasd asda dsas dasd ASDAD')
+end
+
+for j = length(varArgIn):-1:1
+    x(i) = [0,1,-2]
+
+    for k = 0:1:10 % i ovo je neki asodn
+    y(i) = []
+                for i = length(abv):1:10 % i ovo je neki asodn
+                A(i) = [1,2,3,4,5,-90]
+                if isequal(A,a)
+                    X(jasoda) = []
+                end
+                end
+                if length(kok) < -90
+                        error('adsasd asda dsas dasd $$$$$ %QW^^(*@(*$#@$
+
+                        )) ASDAD')
+                end
+    end
+
+    error('asdasdasd asda sdASDAOD AASD')
+end
+
+for i = 0:1:10 % i ovo je neki asodn
+    y(i) = []
+end
+
+if isequal(x, uniqueX)
+    error('asdokna OKADNOASNOIDKNA')
+end

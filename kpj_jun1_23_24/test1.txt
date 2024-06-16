@@ -1,0 +1,31 @@
+Set s1, s2 = {1 ,2 ,2 ,3 ,4 , -5, 2}, s3;
+
+s1 = {2 , 4 , 8 , 19 ,10};
+
+print("s1 = ");  #stampaj string
+
+print(s1);  #stampaj skup
+print("s3 = ");
+print(s3);
+
+Set s4, s5 = {-1 , 5, 2,3};
+
+s4 = s5 /\ s2;    #presek skupova
+
+s5 = s4 \/ s1;         #unija skupova
+
+s1 = s2 - s5;           #razlika skupova
+
+s6 = {1,2,3,10};
+
+Set s7, s8;
+
+s7 = ~s6;           #komplement skupa u odnosu na skup od min do max elementa
+
+print(s7^s5 \/ s2);     # s^p simetricna razlika
+
+print("Proizvod s7 i s2 ");
+proizvod(s7, s2);       # print dekartov proizvod
+
+
+

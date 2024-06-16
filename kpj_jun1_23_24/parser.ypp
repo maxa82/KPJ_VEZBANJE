@@ -1,0 +1,297 @@
+%{
+    #include<iostream>
+    #include<cstdlib>
+    #include<vector>
+    #include<map>
+    #include<set>
+
+    using namespace std;
+    
+    #define YYDEBUG 1
+    
+    extern int yylex();
+
+    map<string, set<int>*> tablica;
+
+    #include"parser.tab.hpp"
+
+    void yyerror(string s){
+        cout<<s<<endl;
+        exit(EXIT_FAILURE);
+    }
+
+%}
+
+%union{
+    int i;
+    set<int>* skup;
+    string *s;
+    vector<int> *v;
+
+}
+
+
+%token skup_token presek_token unija_token proizvod_token print_token
+%token <s> string_token id_token
+%token <i> num_token
+
+%type NIZ_NAREDBI NIZ_A A NAREDBA
+%type <v> NIZ_BR_1 NIZ_BR
+%type <skup> E
+
+%left unija_token
+%left presek_token
+%left '-' '^'
+%nonassoc '~'
+
+%%
+
+
+NIZ_NAREDBI: NIZ_NAREDBI NAREDBA';'
+| NAREDBA';'
+;
+
+NAREDBA: skup_token NIZ_A {
+
+}
+| id_token '=' E {
+    delete tablica[*$1];
+    tablica[*$1] = new set<int>(*$3);
+    delete $1;
+    delete $3;
+}
+| print_token '('string_token ')' {
+    unsigned n = (*$3).size();
+    cout<<(*$3).substr(1,n-2);
+    delete $3;
+}
+| print_token '(' E ')' { 
+
+    
+    
+
+    cout<<"{ ";
+
+    for(auto el : (*$3)){
+        cout<<el<<" ";
+    }
+    
+    cout<<"}\n";
+    delete $3;
+    
+     }
+| proizvod_token '(' E ',' E ')' {
+
+         cout<<"{ ";
+    for(auto el1 : (*$3)){
+        for(auto el2 : (*$5)){ 
+            cout<<"("<<el1<<","<<el2<<") ";
+    } 
+    }
+    cout<<"}\n";
+
+    delete $3;
+    delete $5;
+
+
+}
+;
+
+NIZ_A: NIZ_A ',' A {
+
+}
+| A {}
+;
+
+A: id_token '=' E {
+
+    tablica[*$1] = new set<int>(*$3);
+    delete $1;
+    delete $3;
+
+}
+| id_token {
+
+        tablica[*$1] = new set<int>();
+        delete $1;
+}
+;
+
+
+E: E unija_token E {
+
+    set<int>* tmp = new set<int>();
+
+    for(auto el: (*$1)){
+        tmp->insert(el);
+    }
+
+    for(auto el: (*$3)){
+        tmp->insert(el);
+    }
+
+    $$ = tmp;
+
+     delete $1;
+    delete $3;
+}
+| E presek_token E {
+
+    set<int>* tmp = new set<int>();
+    int n1 = (*$1).size();
+    int n2 = (*$3).size();
+
+    
+    if(n1<=n2){
+        for(auto el: (*$1)){
+        auto it = (*$3).find(el);
+        if(it!=(*$3).end()){
+            tmp->insert(el);}
+    }
+    }else {
+        for(auto el: (*$3)){
+        auto it = (*$1).find(el);
+        if(it!=(*$1).end()){
+            tmp->insert(el);}
+    }
+
+   
+
+    }
+    
+
+    $$ = tmp;
+    delete $1;
+    delete $3;
+
+}
+| E '-' E {
+
+    set<int>* tmp = new set<int>();
+
+    for(auto el : (*$1)){
+        auto it = (*$3).find(el);
+        if(it==(*$3).end()){
+            tmp->insert(el);
+        }
+        
+    }
+
+    $$ = tmp;
+
+    delete $1;
+    delete $3;
+
+}
+| '~' E {
+
+    set<int>* tmp = new set<int>();
+
+    auto m1 = (*$2).begin();
+    auto m2 = (*$2).rbegin();
+
+    for(int i = *m1; i<= *m2; i++){
+        tmp->insert(i);
+    }
+    
+    set<int>* tmp1 = new set<int>();
+
+    for(auto el : (*tmp)){
+        auto it = (*$2).find(el);
+        if(it==(*$2).end()){
+            tmp1->insert(el);
+        }
+    }
+
+    
+
+    $$ = tmp1; 
+    delete tmp;
+    delete $2;
+    }
+| E '^' E {
+
+    set<int>* tmp = new set<int>();
+
+    for(auto el : (*$1)){
+        auto it = (*$3).find(el);
+        if(it==(*$3).end()){
+            tmp->insert(el);
+        }
+    }
+
+    for(auto el : (*$3)){
+        auto it = (*$1).find(el);
+        if(it==(*$1).end()){
+            tmp->insert(el);
+        }
+    }
+
+
+    $$ = tmp;
+    delete $1;
+    delete $3;
+
+
+}
+| id_token {
+
+    $$ = new set<int>(*tablica[*$1]);
+    delete $1;
+
+}
+| '{' NIZ_BR_1 '}' {
+    $$ = new set<int>();
+    unsigned n = (*$2).size();
+    for(unsigned i = 0; i<n; i++){
+        $$->insert((*$2)[i]);
+    }
+
+    delete $2;
+
+}
+;
+
+NIZ_BR_1: NIZ_BR {
+    $$ = $1;
+
+}
+| {
+    $$ = new vector<int>();
+
+}
+;
+NIZ_BR: NIZ_BR ',' num_token {
+$$=new vector<int>(*$1);
+$$->push_back($3);
+
+delete $1;
+}
+| num_token {
+    $$ = new vector<int>();
+    $$->push_back($1);
+
+    
+
+}
+;
+
+%%
+
+
+int main(){
+
+
+//yydebug = 1;
+
+yyparse();
+
+    for(auto el: tablica){
+        //cout<<el.first<<" ";
+        delete el.second;
+    }
+    cout<<endl;
+
+return 0;
+
+}
